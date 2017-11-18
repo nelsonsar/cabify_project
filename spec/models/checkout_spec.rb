@@ -1,3 +1,5 @@
+require './models/checkout'
+
 RSpec.describe Checkout do
   describe '#total' do
     it 'returns 0.00€ if there are no scanned items' do
