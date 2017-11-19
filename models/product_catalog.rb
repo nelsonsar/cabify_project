@@ -18,4 +18,8 @@ class ProductCatalog
   def self.add(code, name, price)
     instance.items[code] = Struct::Product.new(code, name, price)
   end
+
+  def self.stub_product
+    Struct::Product.new('FOO', 'Cabify Foo', 10.00)
+  end
 end
