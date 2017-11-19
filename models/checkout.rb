@@ -9,7 +9,7 @@ class Checkout
   end
 
   def total
-    0.00
+    items.total
   end
 
   def scan(product_name)
