@@ -17,4 +17,8 @@ class Checkout
     return items.add(product) if product
     puts "#{product_name} is not in catalog."
   end
+
+  def add_discount(item, quantity, total)
+    items.add_discount(item, quantity, total)
+  end
 end

@@ -2,6 +2,7 @@ require './models/item'
 
 class ItemsList
   attr_reader :items
+  Struct.new('DiscountItem', :code, :name, :quantity, :total)
 
   def initialize
     @items = {}
@@ -16,6 +17,15 @@ class ItemsList
       item.increment_quantity
     else
       items[product.code] = Item.new(product)
+    end
+  end
+
+  def add_discount(item, quantity, total)
+    discount_code = "DISCOUNT_#{item.code}"
+    previous_discount = items[discount_code]
+    if previous_discount.nil? || previous_discount.total.abs < total.abs
+      items[discount_code] = Struct::DiscountItem.new(
+        discount_code, item.name, quantity, -total)
     end
   end
 

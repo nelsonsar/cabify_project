@@ -17,7 +17,7 @@ RSpec.describe TwoForOne do
       end
     end
 
-    context 'when there is on scanned promotional product' do
+    context 'when there is one scanned promotional product' do
       it 'does nothing' do
         checkout.scan(product.code)
         expect { two_for_one.apply(checkout) }.not_to change { checkout.total }
