@@ -24,10 +24,22 @@ RSpec.describe Checkout do
         checkout.scan(product.code)
       end
 
-      it 'adds product to items list' do
-        checkout.scan(product.code)
+      context 'and not in the items list' do
+        it 'adds product to items list' do
+          checkout.scan(product.code)
 
-        expect(checkout.items[product.code]).not_to eq(nil)
+          expect(checkout.items[product.code]).not_to eq(nil)
+        end
+      end
+
+      context 'and in the items list' do
+        it 'increments item quantity on items list' do
+          checkout.scan(product.code)
+          checkout.scan(product.code)
+
+          item = checkout.items[product.code]
+          expect(item.quantity).to eq(2)
+        end
       end
     end
 
