@@ -12,6 +12,11 @@ class ItemsList
   end
 
   def add(product)
-    items[product.code] = Item.new(p)
+    item = items[product.code]
+    if item
+      item.increment_quantity
+    else
+      items[product.code] = Item.new(p)
+    end
   end
 end
