@@ -17,25 +17,25 @@ class ProductCatalog
     @items = {}
   end
 
-  def self.get(code)
-    instance.items[code]
-  end
-
-  def self.add(code, name, price)
-    instance.items[code] = Struct::Product.new(code, name, price)
-  end
-
-  def self.remove(code)
-    instance.items.delete(code)
-  end
-
   def self.stub_product
     Struct::Product.new('FOO', 'Cabify Foo', 10.00)
   end
 
-  def self.display
+  def get(code)
+    items[code]
+  end
+
+  def add(code, name, price)
+    items[code] = Struct::Product.new(code, name, price)
+  end
+
+  def remove(code)
+    items.delete(code)
+  end
+
+  def display
     puts HEADER
-    instance.items.values.each do |item|
+    items.values.each do |item|
       price = format('%.2f', item.price)
       puts format(DISPLAY_FORMAT, item.code, item.name, price)
     end

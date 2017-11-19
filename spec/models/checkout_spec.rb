@@ -3,6 +3,7 @@ require './models/checkout'
 RSpec.describe Checkout do
   let(:checkout) { Checkout.new }
   let(:product) { ProductCatalog.stub_product }
+  let(:catalog) { ProductCatalog.instance }
 
   describe '#total' do
     context 'when there are no scanned items' do
@@ -13,8 +14,7 @@ RSpec.describe Checkout do
 
     context 'when there are scanned items' do
       it 'returns the sum of quantity weighted prices' do
-        allow(ProductCatalog).to receive(:get).with(product.code)
-                                              .and_return(product)
+        allow(catalog).to receive(:get).with(product.code).and_return(product)
         checkout.scan(product.code)
         checkout.scan(product.code)
 
@@ -27,8 +27,7 @@ RSpec.describe Checkout do
   describe '#scan' do
     context 'when the item is in catalog' do
       before do
-        allow(ProductCatalog).to receive(:get).with(product.code)
-                                              .and_return(product)
+        allow(catalog).to receive(:get).with(product.code).and_return(product)
       end
 
       it 'calls add on list of items' do

@@ -2,6 +2,7 @@ require './models/product_catalog'
 
 RSpec.describe ProductCatalog do
   let(:product) { ProductCatalog.stub_product }
+  let(:catalog) { ProductCatalog.instance }
 
   describe '.initialize' do
     it 'raises an error' do
@@ -11,16 +12,16 @@ RSpec.describe ProductCatalog do
 
   describe '.add' do
     it 'adds product to catalog' do
-      ProductCatalog.add(product.code, product.name, product.price)
-      expect(ProductCatalog.instance.items[product.code]).not_to eq(nil)
+      catalog.add(product.code, product.name, product.price)
+      expect(catalog.items[product.code]).not_to eq(nil)
     end
   end
 
   describe '.get' do
     context 'when product is in catalog' do
       it 'returns product' do
-        ProductCatalog.add(product.code, product.name, product.price)
-        product_retrived = ProductCatalog.get(product.code)
+        catalog.add(product.code, product.name, product.price)
+        product_retrived = catalog.get(product.code)
         expect(product_retrived).to eq(product)
       end
     end
@@ -36,23 +37,23 @@ RSpec.describe ProductCatalog do
 
   describe '.remove' do
     it 'removes product from catalog' do
-      ProductCatalog.remove('FOO')
-      expect(ProductCatalog.instance.items['FOO']).to eq(nil)
+      catalog.remove('FOO')
+      expect(catalog.items['FOO']).to eq(nil)
     end
   end
 
   describe '.display' do
     it 'returns a table string with products on catalog' do
-      ProductCatalog.remove('FOO')
-      ProductCatalog.add('VOUCHER', 'Cabify Voucher', 5.00)
-      ProductCatalog.add('TSHIRT', 'Cabify T-Shirt', 20.00)
-      ProductCatalog.add('MUG', 'Cabify Coffee Mug', 7.50)
+      catalog.remove('FOO')
+      catalog.add('VOUCHER', 'Cabify Voucher', 5.00)
+      catalog.add('TSHIRT', 'Cabify T-Shirt', 20.00)
+      catalog.add('MUG', 'Cabify Coffee Mug', 7.50)
       expected_string = "Code         | Name                |  Price\n"
       expected_string << "-------------------------------------------------\n"
       expected_string << "VOUCHER      | Cabify Voucher      |   5.00€\n"
       expected_string << "TSHIRT       | Cabify T-Shirt      |  20.00€\n"
       expected_string << "MUG          | Cabify Coffee Mug   |   7.50€\n"
-      expect { ProductCatalog.display }.to output(expected_string).to_stdout
+      expect { catalog.display }.to output(expected_string).to_stdout
     end
   end
 end

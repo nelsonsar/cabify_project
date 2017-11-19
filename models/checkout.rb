@@ -13,7 +13,7 @@ class Checkout
   end
 
   def scan(product_name)
-    product = ProductCatalog.get(product_name)
+    product = ProductCatalog.instance.get(product_name)
     return items.add(product) if product
     puts "#{product_name} is not in catalog."
   end
