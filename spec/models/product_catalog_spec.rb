@@ -1,3 +1,5 @@
+require './models/product_catalog'
+
 RSpec.describe ProductCatalog do
   describe '.initialize' do
     it 'raises an error' do
