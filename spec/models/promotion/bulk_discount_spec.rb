@@ -1,3 +1,6 @@
+require './models/promotion'
+require './models/promotion/bulk_discount'
+
 RSpec.describe BulkDiscount do
   let(:product) { ProductCatalog.stub_product }
   let(:bulk_discount) { BulkDiscount.new(product.code, 3, 19.00) }
