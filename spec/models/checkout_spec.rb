@@ -2,16 +2,29 @@ require './models/checkout'
 
 RSpec.describe Checkout do
   let(:checkout) { Checkout.new }
+  let(:product) { ProductCatalog.stub_product }
 
   describe '#total' do
-    it 'returns 0.00 if there are no scanned items' do
-      expect(checkout.total).to eq(0.00)
+    context 'when there are no scanned items' do
+      it 'returns 0.00' do
+        expect(checkout.total).to eq(0.00)
+      end
+    end
+
+    context 'when there are scanned items' do
+      it 'returns the sum of quantity weighted prices' do
+        allow(ProductCatalog).to receive(:get).with(product.code)
+                                              .and_return(product)
+        checkout.scan(product.code)
+        checkout.scan(product.code)
+
+        expected_total = product.price * 2
+        expect(checkout.total).to eq(expected_total)
+      end
     end
   end
 
   describe '#scan' do
-    let(:product) { ProductCatalog.stub_product }
-
     context 'when the item is in catalog' do
       before do
         allow(ProductCatalog).to receive(:get).with(product.code)
