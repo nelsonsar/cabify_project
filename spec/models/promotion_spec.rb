@@ -1,3 +1,5 @@
+require './models/promotion'
+
 RSpec.describe Promotion do
   describe '.initialize' do
     it 'raises not implemented method' do
@@ -6,11 +8,14 @@ RSpec.describe Promotion do
   end
 
   describe '#apply' do
-    Promotion.class_eval do
-      def initialize; end
-    end
+    it 'raises not implemented method' do
+      Promotion.class_eval do
+        def initialize; end
+      end
 
-    promotion = Promotion.new
-    expect { promotion.apply }.to raise_error(NotImplementedError)
+      promotion = Promotion.new
+
+      expect { promotion.apply }.to raise_error(NotImplementedError)
+    end
   end
 end
