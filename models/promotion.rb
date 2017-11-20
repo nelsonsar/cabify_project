@@ -3,7 +3,7 @@ class Promotion
     raise NotImplementedError
   end
 
-  def apply
+  def get_discount
     raise NotImplementedError
   end
 end

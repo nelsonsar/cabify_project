@@ -1,3 +1,5 @@
+require './models/promotion'
+
 class BulkPerUnitPromotion < Promotion
   attr_reader :product_code, :min_units, :per_unit_price
 
@@ -7,16 +9,16 @@ class BulkPerUnitPromotion < Promotion
     @per_unit_price = per_unit_price
   end
 
-  def apply(checkout)
+  def get_discount(checkout)
     item = checkout.items[product_code]
-    return unless appliable?(item)
+    return unless applicable?(item)
     total_discount = discount(item)
-    checkout.add_discount(item, item.quantity, total_discount)
+    DiscountItem.new(item.product, item.quantity, total_discount)
   end
 
   private
 
-  def appliable?(item)
+  def applicable?(item)
     item && item.quantity >= min_units
   end
 

@@ -1,3 +1,5 @@
+require './models/promotion'
+
 class BuyXforYPromotion < Promotion
   attr_reader :product_code, :buyX, :payY
 
@@ -7,17 +9,17 @@ class BuyXforYPromotion < Promotion
     @payY = payY
   end
 
-  def apply(checkout)
+  def get_discount(checkout)
     item = checkout.items[product_code]
-    return unless appliable?(item)
+    return unless applicable?(item)
     quantity = discount_quantity(item)
     discount_total = discount(item, quantity)
-    checkout.add_discount(item, quantity, discount_total)
+    DiscountItem.new(item.product, quantity, discount_total)
   end
 
   private
 
-  def appliable?(item)
+  def applicable?(item)
     item && item.quantity >= buyX
   end
 
