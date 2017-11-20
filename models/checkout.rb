@@ -1,13 +1,15 @@
 require './models/product_catalog'
 require './models/item'
-Struct.new('DiscountItem', :code, :name, :quantity, :total)
+require './models/discount_item'
 
 class Checkout
-  attr_reader :items, :catalog
+  attr_reader :items, :discounts, :catalog, :promotion_rules
 
-  def initialize
+  def initialize(promotion_rules = [])
     @items = {}
+    @discounts = {}
     @catalog = ProductCatalog.instance
+    @promotion_rules = promotion_rules
   end
 
   def scan(product_code)
@@ -17,19 +19,34 @@ class Checkout
   end
 
   def total
-    items.values.sum(&:total)
-  end
-
-  def add_discount(item, quantity, total)
-    discount_code = "DISCOUNT_#{item.code}"
-    previous_discount = items[discount_code]
-    if previous_discount.nil? || previous_discount.total.abs < total.abs
-      items[discount_code] = Struct::DiscountItem.new(
-        discount_code, item.name, quantity, -total)
-    end
+    apply_promotions
+    item_total - discount_total
   end
 
   private
+
+    def item_total
+      items.values.sum(&:total)
+    end
+
+    def discount_total
+      discounts.values.sum(&:total)
+    end
+
+    def apply_promotions
+      discounts.clear
+      promotion_rules.each do |promotion|
+        discount = promotion.get_discount(self)
+        add_discount(discount) if discount
+      end
+    end
+
+    def add_discount(discount)
+      previous_discount = discounts[discount.code]
+      if previous_discount.nil? || previous_discount.total < discount.total
+        discounts[discount.code] = discount
+      end
+    end
 
     def add_product(product)
       if (item = items[product.code])
