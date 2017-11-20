@@ -13,7 +13,7 @@ RSpec.describe ProductCatalog do
   describe '.add' do
     it 'adds product to catalog' do
       catalog.add(product.code, product.name, product.price)
-      expect(catalog.items[product.code]).not_to eq(nil)
+      expect(catalog.products[product.code]).not_to eq(nil)
     end
   end
 
@@ -38,7 +38,7 @@ RSpec.describe ProductCatalog do
   describe '.remove' do
     it 'removes product from catalog' do
       catalog.remove('FOO')
-      expect(catalog.items['FOO']).to eq(nil)
+      expect(catalog.products['FOO']).to eq(nil)
     end
   end
 

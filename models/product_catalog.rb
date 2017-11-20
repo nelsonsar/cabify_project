@@ -1,11 +1,9 @@
 # frozen_string_literal
-
 require 'singleton'
 
 class ProductCatalog
   include Singleton
-
-  attr_reader :items
+  attr_reader :products
 
   Struct.new('Product', :code, :name, :price)
 
@@ -14,30 +12,34 @@ class ProductCatalog
   DISPLAY_FORMAT = '%-13.13s| %-20.20s| %6.6s€'.freeze
 
   def initialize
-    @items = {}
-  end
-
-  def self.stub_product
-    Struct::Product.new('FOO', 'Cabify Foo', 10.00)
+    @products = {}
   end
 
   def get(code)
-    items[code]
+    products[code]
   end
 
   def add(code, name, price)
-    items[code] = Struct::Product.new(code, name, price)
+    products[code] = Struct::Product.new(code, name, price)
   end
 
   def remove(code)
-    items.delete(code)
+    products.delete(code)
   end
 
   def display
     puts HEADER
-    items.values.each do |item|
-      price = format('%.2f', item.price)
-      puts format(DISPLAY_FORMAT, item.code, item.name, price)
-    end
+    products.values.each { |product| display_row(product) }
   end
+
+  def self.stub_product(code = 'FOO', name = 'Cabify Foo', price = 10.00)
+    Struct::Product.new(code, name, price)
+  end
+
+  private
+
+    def display_row(product)
+      price = format('%.2f', product.price)
+      puts format(DISPLAY_FORMAT, product.code, product.name, price)
+    end
 end
