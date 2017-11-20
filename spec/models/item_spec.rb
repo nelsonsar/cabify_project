@@ -1,6 +1,6 @@
-require './models/items_list'
+require './models/item'
 
-RSpec.describe ItemsList do
+RSpec.describe Item do
   let(:product) { ProductCatalog.stub_product }
   let(:item) { Item.new(product) }
 

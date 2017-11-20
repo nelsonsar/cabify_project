@@ -1,9 +1,12 @@
-class Item < SimpleDelegator
-  attr_reader :quantity
+class Item
+  extend Forwardable
+  attr_reader :quantity, :product
+
+  def_delegators :product, :code, :price, :name
 
   def initialize(product)
     @quantity = 1
-    super(product)
+    @product = product
   end
 
   def increment_quantity

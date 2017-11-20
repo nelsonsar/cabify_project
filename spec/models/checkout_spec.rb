@@ -25,15 +25,9 @@ RSpec.describe Checkout do
   end
 
   describe '#scan' do
-    context 'when the item is in catalog' do
+    context 'when the product is in catalog' do
       before do
         allow(catalog).to receive(:get).with(product.code).and_return(product)
-      end
-
-      it 'calls add on list of items' do
-        expect(checkout.items).to receive(:add).with(product)
-
-        checkout.scan(product.code)
       end
 
       context 'and not in the items list' do
@@ -45,11 +39,13 @@ RSpec.describe Checkout do
       end
 
       context 'and in the items list' do
-        it 'increments item quantity on items list' do
+        it 'increments items quantity' do
           checkout.scan(product.code)
+          item = checkout.items[product.code]
+          expect(item.quantity).to eq(1)
+
           checkout.scan(product.code)
 
-          item = checkout.items[product.code]
           expect(item.quantity).to eq(2)
         end
       end

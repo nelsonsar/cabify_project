@@ -11,26 +11,30 @@ RSpec.describe BuyXforYPromotion do
   end
 
   describe '#apply' do
-    context 'when promotion is not appliable' do
-      it 'does nothing' do
-        expect { two_for_one.apply(checkout) }.not_to change { checkout.total }
+    context 'when promoted products is not in items list' do
+      it 'does not apply any discount' do
+        expect { two_for_one.send(:apply, checkout) }
+          .not_to change { checkout.total }
       end
     end
 
-    context 'when there is one scanned promotional product' do
-      it 'does nothing' do
+    context 'when promoted products quantity is not enough for promotion' do
+      it 'does not apply any discount' do
         checkout.scan(product.code)
-        expect { two_for_one.apply(checkout) }.not_to change { checkout.total }
+        expect { two_for_one.send(:apply, checkout) }.not_to change { checkout.total }
       end
     end
 
-    context 'when there are more than one scanned promotional product' do
-      it 'applies two for one discount' do
+    context 'when promoted products quantity is enough for promotion' do
+      it 'applies discount' do
         checkout.scan(product.code)
         checkout.scan(product.code)
         checkout.scan(product.code)
-        expect { two_for_one.apply(checkout) }.to change { checkout.total }
-          .from(product.price * 3).to(product.price * 2)
+
+        price = product.price * 3
+        price_with_discount = product.price * 2
+        expect { two_for_one.send(:apply, checkout) }.to change { checkout.total }
+          .from(price).to(price_with_discount)
       end
     end
   end
