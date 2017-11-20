@@ -1,39 +1,47 @@
-require './models/promotion'
 require './models/promotion/bulk_per_unit_promotion'
 
 RSpec.describe BulkPerUnitPromotion do
-  let(:product) { ProductCatalog.stub_product }
-  let(:bulk_discount) { BulkPerUnitPromotion.new(product.code, 3, 19.00) }
-  let(:checkout) { Checkout.new }
+  let(:bulk_discount) { BulkPerUnitPromotion.new('FOO', 3, 19.00) }
+  let(:checkout) { Checkout.new([bulk_discount]) }
 
   before do
-    ProductCatalog.instance.add(product.code, product.name, product.price)
+    ProductCatalog.instance.add('FOO', 'Cabify Foo', 20.00)
+    ProductCatalog.instance.add('BAR', 'Cabify Bar', 5.00)
   end
 
-  describe '#apply' do
-    context 'when promotion is not appliable' do
-      it 'does nothing' do
-        expect { bulk_discount.apply(checkout) }.not_to change { checkout.total }
+  describe '#get_discount' do
+    context 'when promoted product is not in items list' do
+      it 'does not return any discount' do
+        checkout.scan('BAR')
+        checkout.scan('BAR')
+        checkout.scan('BAR')
+
+        discount = bulk_discount.get_discount(checkout)
+        expect(discount).to eq(nil)
       end
     end
 
-    context 'when there are two scanned promotional product' do
-      it 'does nothing' do
-        checkout.scan(product.code)
-        checkout.scan(product.code)
-        expect { bulk_discount.apply(checkout) }
-          .not_to change { checkout.total }
+    context 'when promoted products quantity is not enough for promotion' do
+      it 'does not return any discount' do
+        checkout.scan('FOO')
+        checkout.scan('FOO')
+
+        discount = bulk_discount.get_discount(checkout)
+        expect(discount).to eq(nil)
       end
     end
 
-    context 'when there are three or more scanned promotional product' do
-      it 'applies discount per unit' do
-        checkout.scan(product.code)
-        checkout.scan(product.code)
-        checkout.scan(product.code)
-        checkout.scan(product.code)
-        expect { bulk_discount.apply(checkout) }.to change { checkout.total }
-          .from(product.price * 4).to(19.00 * 4)
+    context 'when there are three or more scanned promotional products' do
+      it 'returns discount per unit' do
+        checkout.scan('FOO')
+        checkout.scan('FOO')
+        checkout.scan('FOO')
+        checkout.scan('FOO')
+
+        discount = bulk_discount.get_discount(checkout)
+        expect(discount).not_to eq(nil)
+        expect(discount.total).to eq(4.00)
+        expect(discount.code).to eq('FOO')
       end
     end
   end
