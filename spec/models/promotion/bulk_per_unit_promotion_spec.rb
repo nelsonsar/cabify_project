@@ -1,9 +1,9 @@
 require './models/promotion'
-require './models/promotion/bulk_discount'
+require './models/promotion/bulk_per_unit_promotion'
 
-RSpec.describe BulkDiscount do
+RSpec.describe BulkPerUnitPromotion do
   let(:product) { ProductCatalog.stub_product }
-  let(:bulk_discount) { BulkDiscount.new(product.code, 3, 19.00) }
+  let(:bulk_discount) { BulkPerUnitPromotion.new(product.code, 3, 19.00) }
   let(:checkout) { Checkout.new }
 
   before do
@@ -21,7 +21,8 @@ RSpec.describe BulkDiscount do
       it 'does nothing' do
         checkout.scan(product.code)
         checkout.scan(product.code)
-        expect { bulk_discount.apply(checkout) }.not_to change { checkout.total }
+        expect { bulk_discount.apply(checkout) }
+          .not_to change { checkout.total }
       end
     end
 

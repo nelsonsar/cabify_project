@@ -1,9 +1,9 @@
 require './models/promotion'
-require './models/promotion/two_for_one'
+require './models/promotion/buy_x_for_y_promotion'
 
-RSpec.describe TwoForOne do
+RSpec.describe BuyXforYPromotion do
   let(:product) { ProductCatalog.stub_product }
-  let(:two_for_one) { TwoForOne.new(product.code) }
+  let(:two_for_one) { BuyXforYPromotion.new(product.code, 2, 1) }
   let(:checkout) { Checkout.new }
 
   before do
