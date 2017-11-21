@@ -10,7 +10,7 @@ class BuyXforYPromotion < Promotion
   end
 
   def get_discount(checkout)
-    item = checkout.items[product_code]
+    item = checkout.sales[product_code]
     return unless applicable?(item)
     quantity = discount_quantity(item)
     discount_total = discount(item, quantity)

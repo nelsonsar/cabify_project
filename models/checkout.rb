@@ -3,11 +3,10 @@ require './models/item'
 require './models/discount_item'
 
 class Checkout
-  attr_reader :items, :discounts, :catalog, :promotion_rules
+  attr_reader :items, :catalog, :promotion_rules
 
   def initialize(promotion_rules = [])
-    @items = {}
-    @discounts = {}
+    @items = { sales: {}, discounts: {} }
     @catalog = ProductCatalog.instance
     @promotion_rules = promotion_rules
   end
@@ -20,13 +19,21 @@ class Checkout
 
   def total
     apply_promotions
-    item_total - discount_total
+    sales_total - discount_total
+  end
+
+  def sales
+    items[:sales]
+  end
+
+  def discounts
+    items[:discounts]
   end
 
   private
 
-    def item_total
-      items.values.sum(&:total)
+    def sales_total
+      sales.values.sum(&:total)
     end
 
     def discount_total
@@ -38,21 +45,21 @@ class Checkout
       promotion_rules.each do |promotion|
         discount = promotion.get_discount(self)
         add_discount(discount) if discount
-      end
+      end.compact
     end
 
     def add_discount(discount)
-      previous_discount = discounts[discount.code]
-      if previous_discount.nil? || previous_discount.total < discount.total
+      prev_discount = discounts[discount.code]
+      if prev_discount.nil? || prev_discount.total < discount.total
         discounts[discount.code] = discount
       end
     end
 
     def add_product(product)
-      if (item = items[product.code])
+      if (item = sales[product.code])
         item.increment_quantity
       else
-        items[product.code] = Item.new(product)
+        sales[product.code] = Item.new(product)
       end
     end
 end

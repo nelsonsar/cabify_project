@@ -87,18 +87,18 @@ RSpec.describe Checkout do
 
   describe '#scan' do
     context 'when the product is in catalog' do
-      context 'and not in the items list' do
-        it 'adds product to items list' do
+      context 'and not in the sales list' do
+        it 'adds product to sales list' do
           checkout.scan('FOO')
 
-          expect(checkout.items['FOO']).not_to eq(nil)
+          expect(checkout.sales['FOO']).not_to eq(nil)
         end
       end
 
-      context 'and in the items list' do
-        it 'increments items quantity' do
+      context 'and in the sales list' do
+        it 'increments sales quantity' do
           checkout.scan('FOO')
-          item = checkout.items['FOO']
+          item = checkout.sales['FOO']
 
           expect(item.quantity).to eq(1)
 
@@ -115,10 +115,10 @@ RSpec.describe Checkout do
           .to output("BAR is not in catalog.\n").to_stdout
       end
 
-      it 'does not add product to items list' do
+      it 'does not add product to sales list' do
         checkout.scan('BAR')
 
-        expect(checkout.items['BAR']).to eq(nil)
+        expect(checkout.sales['BAR']).to eq(nil)
       end
     end
   end
