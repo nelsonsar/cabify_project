@@ -4,8 +4,11 @@ require './models/promotion/buy_x_for_y_promotion'
 
 RSpec.describe Checkout do
   let(:checkout) { Checkout.new }
-  let(:product) { ProductCatalog.stub_product }
   let(:catalog) { ProductCatalog.instance }
+
+  before do
+    catalog.add('FOO', 'Cabify Foo', 10.00)
+  end
 
   describe '#total' do
     context 'when there are no scanned items' do
@@ -16,12 +19,10 @@ RSpec.describe Checkout do
 
     context 'when there are scanned items' do
       it 'returns the sum of quantity weighted prices' do
-        allow(catalog).to receive(:get).with(product.code).and_return(product)
-        checkout.scan(product.code)
-        checkout.scan(product.code)
+        checkout.scan('FOO')
+        checkout.scan('FOO')
 
-        expected_total = product.price * 2
-        expect(checkout.total).to eq(expected_total)
+        expect(checkout.total).to eq(20.00)
       end
     end
 
@@ -86,26 +87,22 @@ RSpec.describe Checkout do
 
   describe '#scan' do
     context 'when the product is in catalog' do
-      before do
-        allow(catalog).to receive(:get).with(product.code).and_return(product)
-      end
-
       context 'and not in the items list' do
         it 'adds product to items list' do
-          checkout.scan(product.code)
+          checkout.scan('FOO')
 
-          expect(checkout.items[product.code]).not_to eq(nil)
+          expect(checkout.items['FOO']).not_to eq(nil)
         end
       end
 
       context 'and in the items list' do
         it 'increments items quantity' do
-          checkout.scan(product.code)
-          item = checkout.items[product.code]
+          checkout.scan('FOO')
+          item = checkout.items['FOO']
 
           expect(item.quantity).to eq(1)
 
-          checkout.scan(product.code)
+          checkout.scan('FOO')
 
           expect(item.quantity).to eq(2)
         end
@@ -114,14 +111,14 @@ RSpec.describe Checkout do
 
     context 'when the item is not in catalog' do
       it 'outputs unavailable message' do
-        expect { checkout.scan(product.code) }
-          .to output("#{product.code} is not in catalog.\n").to_stdout
+        expect { checkout.scan('BAR') }
+          .to output("BAR is not in catalog.\n").to_stdout
       end
 
       it 'does not add product to items list' do
-        checkout.scan(product.code)
+        checkout.scan('BAR')
 
-        expect(checkout.items[product.code]).to eq(nil)
+        expect(checkout.items['BAR']).to eq(nil)
       end
     end
   end

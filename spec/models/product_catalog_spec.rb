@@ -1,8 +1,8 @@
 require './models/product_catalog'
 
 RSpec.describe ProductCatalog do
-  let(:product) { ProductCatalog.stub_product }
   let(:catalog) { ProductCatalog.instance }
+  let(:product) { ProductCatalog.stub_product }
 
   describe '.initialize' do
     it 'raises an error' do
@@ -12,8 +12,8 @@ RSpec.describe ProductCatalog do
 
   describe '.add' do
     it 'adds product to catalog' do
-      catalog.add(product.code, product.name, product.price)
-      expect(catalog.products[product.code]).not_to eq(nil)
+      catalog.add('FOO','Cabify Foo', 10.00)
+      expect(catalog.products['FOO']).not_to eq(nil)
     end
   end
 
