@@ -13,7 +13,7 @@ class BulkPerUnitPromotion < Promotion
     item = checkout.sales[product_code]
     return unless applicable?(item)
     total_discount = discount(item)
-    DiscountItem.new(item.product, item.quantity, total_discount)
+    Item.new(item.product, item.quantity, total_discount)
   end
 
   private

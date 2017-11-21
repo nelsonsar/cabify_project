@@ -4,9 +4,10 @@ class Item
 
   def_delegators :product, :code, :price, :name
 
-  def initialize(product)
-    @quantity = 1
+  def initialize(product, quantity = 1, total = nil)
+    @quantity = quantity
     @product = product
+    @total = total
   end
 
   def increment_quantity
@@ -14,6 +15,6 @@ class Item
   end
 
   def total
-    quantity * price
+    @total || (quantity * price)
   end
 end

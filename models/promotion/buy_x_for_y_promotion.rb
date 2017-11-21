@@ -14,7 +14,7 @@ class BuyXforYPromotion < Promotion
     return unless applicable?(item)
     quantity = discount_quantity(item)
     discount_total = discount(item, quantity)
-    DiscountItem.new(item.product, quantity, discount_total)
+    Item.new(item.product, quantity, discount_total)
   end
 
   private

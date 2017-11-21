@@ -1,6 +1,5 @@
 require './models/product_catalog'
 require './models/item'
-require './models/discount_item'
 
 class Checkout
   attr_reader :items, :catalog, :promotion_rules
@@ -45,7 +44,7 @@ class Checkout
       promotion_rules.each do |promotion|
         discount = promotion.get_discount(self)
         add_discount(discount) if discount
-      end.compact
+      end
     end
 
     def add_discount(discount)
