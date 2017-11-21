@@ -1,33 +1,32 @@
 require './models/promotion'
 
 class BuyXforYPromotion < Promotion
-  attr_reader :product_code, :buyX, :payY
+  attr_reader :product_code, :buy_x, :pay_y
 
-  def initialize(product_code, buyX, payY)
+  def initialize(product_code, buy_x, pay_y)
     @product_code = product_code
-    @buyX = buyX
-    @payY = payY
+    @buy_x = buy_x
+    @pay_y = pay_y
   end
 
-  def get_discount(checkout)
+  def discount(checkout)
     item = checkout.sales[product_code]
     return unless applicable?(item)
     quantity = discount_quantity(item)
-    discount_total = discount(item, quantity)
-    Item.new(item.product, quantity, discount_total)
+    Item.new(item.product, quantity, discount_total(item, quantity))
   end
 
   private
 
   def applicable?(item)
-    item && item.quantity >= buyX
+    item && item.quantity >= buy_x
   end
 
   def discount_quantity(item)
-    (item.quantity / buyX).floor * (buyX - payY)
+    (item.quantity / buy_x).floor * (buy_x - pay_y)
   end
 
-  def discount(item, quantity)
+  def discount_total(item, quantity)
     quantity * item.price
   end
 end

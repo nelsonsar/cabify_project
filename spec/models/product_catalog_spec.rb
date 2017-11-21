@@ -12,7 +12,7 @@ RSpec.describe ProductCatalog do
 
   describe '.add' do
     it 'adds product to catalog' do
-      catalog.add('FOO','Cabify Foo', 10.00)
+      catalog.add('FOO', 'Cabify Foo', 10.00)
       expect(catalog.products['FOO']).not_to eq(nil)
     end
   end

@@ -38,8 +38,8 @@ class ProductCatalog
 
   private
 
-    def display_row(product)
-      price = format('%.2f', product.price)
-      puts format(DISPLAY_FORMAT, product.code, product.name, price)
-    end
+  def display_row(product)
+    price = format('%.2f', product.price)
+    puts format(DISPLAY_FORMAT, product.code, product.name, price)
+  end
 end

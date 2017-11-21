@@ -9,11 +9,10 @@ class BulkPerUnitPromotion < Promotion
     @per_unit_price = per_unit_price
   end
 
-  def get_discount(checkout)
+  def discount(checkout)
     item = checkout.sales[product_code]
     return unless applicable?(item)
-    total_discount = discount(item)
-    Item.new(item.product, item.quantity, total_discount)
+    Item.new(item.product, item.quantity, discount_total(item))
   end
 
   private
@@ -22,7 +21,7 @@ class BulkPerUnitPromotion < Promotion
     item && item.quantity >= min_units
   end
 
-  def discount(item)
+  def discount_total(item)
     item.total - (item.quantity * per_unit_price)
   end
 end

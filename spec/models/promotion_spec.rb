@@ -7,12 +7,12 @@ RSpec.describe Promotion do
     end
   end
 
-  describe '#get_discount' do
+  describe '#discount' do
     it 'raises not implemented method' do
       Promotion.class_eval { def initialize; end }
       promotion = Promotion.new
 
-      expect { promotion.get_discount }.to raise_error(NotImplementedError)
+      expect { promotion.discount }.to raise_error(NotImplementedError)
     end
   end
 end

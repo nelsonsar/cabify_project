@@ -9,14 +9,14 @@ RSpec.describe BuyXforYPromotion do
     ProductCatalog.instance.add('BAR', 'Cabify Bar', 5.00)
   end
 
-  describe '#get_discount' do
+  describe '#discount' do
     context 'when promoted product is not in items list' do
       it 'does not return any discount' do
         checkout.scan('BAR')
         checkout.scan('BAR')
         checkout.scan('BAR')
 
-        discount = two_for_one.get_discount(checkout)
+        discount = two_for_one.discount(checkout)
         expect(discount).to eq(nil)
       end
     end
@@ -25,7 +25,7 @@ RSpec.describe BuyXforYPromotion do
       it 'does not return any discount' do
         checkout.scan('FOO')
 
-        discount = two_for_one.get_discount(checkout)
+        discount = two_for_one.discount(checkout)
         expect(discount).to eq(nil)
       end
     end
@@ -36,7 +36,7 @@ RSpec.describe BuyXforYPromotion do
         checkout.scan('FOO')
         checkout.scan('FOO')
 
-        discount = two_for_one.get_discount(checkout)
+        discount = two_for_one.discount(checkout)
         expect(discount).not_to eq(nil)
         expect(discount.total).to eq(20.00)
         expect(discount.code).to eq('FOO')
